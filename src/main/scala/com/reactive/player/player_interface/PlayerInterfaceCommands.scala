@@ -1,19 +1,14 @@
-package com.reactive.player.protocols.player_interface
+package com.reactive.player.player_interface
 
 import akka.actor.typed.ActorRef
-import akka.actor.typed.scaladsl.ActorContext
 import com.reactive.player.models.Track
-import com.reactive.player.protocols.player_interface.PlayerInterfaceReplies.Reply
-import com.reactive.player.protocols.queue.QueueReplies
+import com.reactive.player.player_interface.PlayerInterfaceReplies.Reply
+import com.reactive.player.queue.QueueReplies
 
 object PlayerInterfaceCommands {
 
   sealed trait Command {
     def replyTo: ActorRef[Reply]
-
-    def createAdapter(implicit ctx: ActorContext[Command]): ActorRef[QueueReplies.Reply] = {
-      ctx.messageAdapter(QueueReply(_, replyTo))
-    }
   }
 
   sealed trait Request extends Command

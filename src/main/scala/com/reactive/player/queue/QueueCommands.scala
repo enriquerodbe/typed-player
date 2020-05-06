@@ -1,8 +1,8 @@
-package com.reactive.player.protocols.queue
+package com.reactive.player.queue
 
 import akka.actor.typed.ActorRef
 import com.reactive.player.models.Track
-import com.reactive.player.protocols.queue.QueueReplies._
+import com.reactive.player.queue.QueueReplies._
 
 object QueueCommands {
 
@@ -45,7 +45,7 @@ object QueueCommands {
     with PlayingFirstTrackCommand
     with PlayingLastTrackCommand
 
-  case class Stop(replyTo: ActorRef[Stopped.type])
+  case class Stop(replyTo: ActorRef[Stopped])
     extends PlayingCommand
     with PlayingOnlyTrackCommand
     with PlayingFirstTrackCommand
