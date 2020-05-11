@@ -15,7 +15,7 @@ object Main extends App {
   implicit val timeout: Timeout = 3.seconds
   implicit val system: ActorSystem[Command] = ActorSystem(PlayerInterface(), "reactive-player")
   var command = ""
-  var trackName = 1
+  var trackName = 0
 
   try {
     do {
@@ -47,8 +47,7 @@ object Main extends App {
   }
 
   private def makeTrack(): Track = {
-    val track = Track(trackName.toString)
     trackName += 1
-    track
+    Track(trackName.toString)
   }
 }

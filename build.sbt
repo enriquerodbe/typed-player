@@ -3,5 +3,10 @@ name := "reactive-player"
 version := "0.1"
 
 scalaVersion := "2.13.2"
+val akkaVersion = "2.6.5"
+val scalaTestVersion = "3.1.1"
 
-libraryDependencies += "com.typesafe.akka" %% "akka-actor-typed" % "2.6.4"
+libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
+  "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
+  "org.scalatest" %% "scalatest" % scalaTestVersion % Test)

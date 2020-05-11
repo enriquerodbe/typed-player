@@ -11,7 +11,7 @@ object StoppedQueue {
   def apply(state: Queue = Queue.empty): Behavior[StoppedCommand] = Behaviors.receiveMessage {
     case ToggleShuffle(replyTo) =>
       val newState = state.toggleShuffle()
-      replyTo ! ShuffleToggled(state)
+      replyTo ! ShuffleToggled(newState)
       StoppedQueue(newState)
 
     case EnqueueFirstTrack(track, replyTo) =>
