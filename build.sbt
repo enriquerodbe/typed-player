@@ -1,4 +1,4 @@
-name := "reactive-player"
+name := "typed-player"
 
 version := "0.1"
 
