@@ -8,31 +8,32 @@ import com.typed.player.queue.QueueReplies._
 
 object PlayingLastTrackQueue {
 
-  def apply(state: Queue): Behavior[PlayingLastTrackCommand] = Behaviors.receiveMessage {
-    case TogglePlay(replyTo) =>
+  def apply(state: Queue): Behavior[QueueCommand] = Behaviors.receive {
+    case (_, TogglePlay(replyTo)) =>
       val newState = state.togglePlay()
       replyTo ! PlayToggled(newState)
       PlayingLastTrackQueue(newState)
 
-    case ToggleShuffle(replyTo) =>
+    case (_, ToggleShuffle(replyTo)) =>
       val newState = state.toggleShuffle()
       replyTo ! ShuffleToggled(newState)
       PlayingLastTrackQueue(newState)
 
-    case SkipBack(replyTo) =>
+    case (ctx, SkipBack(replyTo)) =>
       val newState = state.skipBack()
-      val nextBehavior = PlayingQueue(newState)
-      replyTo ! SkippedBackFromLastTrack(nextBehavior, newState)
-      Behaviors.stopped
+      replyTo ! SkippedBackFromLastTrack(newState, ctx.self)
+      PlayingQueue(newState)
 
-    case EnqueueTrack(track, replyTo) =>
+    case (ctx, EnqueueTrack(track, replyTo)) =>
       val newState = state.enqueue(track)
-      val nextBehavior = PlayingQueue(newState)
-      replyTo ! TrackEnqueuedAfterLast(nextBehavior, newState)
-      Behaviors.stopped
+      replyTo ! TrackEnqueuedAfterLast(newState, ctx.self)
+      PlayingQueue(newState)
 
-    case Stop(replyTo) =>
-      replyTo ! Stopped(state)
-      Behaviors.stopped
+    case (ctx, Stop(replyTo)) =>
+      replyTo ! Stopped(state, ctx.self)
+      StoppedQueue(state)
+
+    case _ =>
+      Behaviors.unhandled
   }
 }

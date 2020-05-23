@@ -8,25 +8,27 @@ import com.typed.player.queue.QueueReplies._
 
 object PlayingOnlyTrackQueue {
 
-  def apply(state: Queue): Behavior[PlayingOnlyTrackCommand] = Behaviors.receiveMessage {
-    case TogglePlay(replyTo) =>
+  def apply(state: Queue): Behavior[QueueCommand] = Behaviors.receive {
+    case (_, TogglePlay(replyTo)) =>
       val newState = state.togglePlay()
       replyTo ! PlayToggled(newState)
       PlayingOnlyTrackQueue(newState)
 
-    case ToggleShuffle(replyTo) =>
+    case (_, ToggleShuffle(replyTo)) =>
       val newState = state.toggleShuffle()
       replyTo ! ShuffleToggled(newState)
       PlayingOnlyTrackQueue(newState)
 
-    case EnqueueSecondTrack(track, replyTo) =>
+    case (ctx, EnqueueSecondTrack(track, replyTo)) =>
       val newState = state.enqueue(track)
-      val nextBehavior = PlayingFirstTrackQueue(newState)
-      replyTo ! SecondTrackEnqueued(nextBehavior, newState)
-      Behaviors.stopped
+      replyTo ! SecondTrackEnqueued(newState, ctx.self)
+      PlayingFirstTrackQueue(newState)
 
-    case Stop(replyTo) =>
-      replyTo ! Stopped(state)
-      Behaviors.stopped
+    case (ctx, Stop(replyTo)) =>
+      replyTo ! Stopped(state, ctx.self)
+      StoppedQueue(state)
+
+    case _ =>
+      Behaviors.unhandled
   }
 }

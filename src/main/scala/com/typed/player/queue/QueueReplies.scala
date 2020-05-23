@@ -1,6 +1,6 @@
 package com.typed.player.queue
 
-import akka.actor.typed.Behavior
+import akka.actor.typed.ActorRef
 import com.typed.player.models.Queue
 import com.typed.player.queue.QueueCommands._
 
@@ -15,29 +15,26 @@ object QueueReplies {
   case class ShuffleToggled(state: Queue) extends Reply
 
   sealed trait SkippedReply extends Reply
-  case class SkippedFromFirst(next: Behavior[PlayingCommand], state: Queue) extends SkippedReply
+  case class SkippedFromFirst(
+      state: Queue, next: ActorRef[PlayingCommand]) extends SkippedReply
   case class Skipped(state: Queue) extends SkippedReply
   case class SkippedToLastTrack(
-      next: Behavior[PlayingLastTrackCommand],
-      state: Queue) extends SkippedReply
+      state: Queue, next: ActorRef[PlayingLastTrackCommand]) extends SkippedReply
 
   sealed trait SkippedBackReply extends Reply
   case class SkippedBackFromLastTrack(
-      next: Behavior[PlayingCommand], state: Queue) extends SkippedBackReply
+      state: Queue, next: ActorRef[PlayingCommand]) extends SkippedBackReply
   case class SkippedBack(state: Queue) extends SkippedBackReply
   case class SkippedBackToFirst(
-      next: Behavior[PlayingFirstTrackCommand],
-      state: Queue) extends SkippedBackReply
+      state: Queue, next: ActorRef[PlayingFirstTrackCommand]) extends SkippedBackReply
 
-  case class FirstTrackEnqueued(next: Behavior[PlayingOnlyTrackCommand], state: Queue) extends Reply
+  case class FirstTrackEnqueued(state: Queue, next: ActorRef[PlayingOnlyTrackCommand]) extends Reply
   case class SecondTrackEnqueued(
-      next: Behavior[PlayingFirstTrackCommand],
-      state: Queue) extends Reply
+      state: Queue, next: ActorRef[PlayingFirstTrackCommand]) extends Reply
   sealed trait TrackEnqueuedReply extends Reply
   case class TrackEnqueuedAfterLast(
-      next: Behavior[PlayingCommand],
-      state: Queue) extends TrackEnqueuedReply
+      state: Queue, next: ActorRef[PlayingCommand]) extends TrackEnqueuedReply
   case class TrackEnqueued(state: Queue) extends TrackEnqueuedReply
 
-  case class Stopped(state: Queue) extends Reply
+  case class Stopped(state: Queue, next: ActorRef[StoppedCommand]) extends Reply
 }

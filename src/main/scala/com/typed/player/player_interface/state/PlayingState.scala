@@ -1,12 +1,12 @@
 package com.typed.player.player_interface.state
 
-import akka.actor.typed.Behavior
+import akka.actor.typed.ActorRef
 import com.typed.player.player_interface.PlayerInterfaceCommands._
 import com.typed.player.queue.QueueCommands
 import com.typed.player.queue.QueueCommands.PlayingCommand
 
 case class PlayingState(
-    queueBehavior: Behavior[PlayingCommand]) extends InterfaceState[PlayingCommand] {
+    queue: ActorRef[PlayingCommand]) extends InterfaceState[PlayingCommand] {
 
   override val translator: Translator = {
     case TogglePlay(_) => QueueCommands.TogglePlay

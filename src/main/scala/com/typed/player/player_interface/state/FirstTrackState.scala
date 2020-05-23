@@ -1,11 +1,11 @@
 package com.typed.player.player_interface.state
 
-import akka.actor.typed.Behavior
+import akka.actor.typed.ActorRef
 import com.typed.player.player_interface.PlayerInterfaceCommands._
 import com.typed.player.queue.QueueCommands
 import com.typed.player.queue.QueueCommands.PlayingFirstTrackCommand
 
-case class FirstTrackState(queueBehavior: Behavior[PlayingFirstTrackCommand])
+case class FirstTrackState(queue: ActorRef[PlayingFirstTrackCommand])
   extends InterfaceState[PlayingFirstTrackCommand] {
 
   override val translator: Translator = {

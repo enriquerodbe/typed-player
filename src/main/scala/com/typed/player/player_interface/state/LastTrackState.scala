@@ -1,11 +1,11 @@
 package com.typed.player.player_interface.state
 
-import akka.actor.typed.Behavior
+import akka.actor.typed.ActorRef
 import com.typed.player.player_interface.PlayerInterfaceCommands._
 import com.typed.player.queue.QueueCommands
 import com.typed.player.queue.QueueCommands.PlayingLastTrackCommand
 
-case class LastTrackState(queueBehavior: Behavior[PlayingLastTrackCommand])
+case class LastTrackState(queue: ActorRef[PlayingLastTrackCommand])
   extends InterfaceState[PlayingLastTrackCommand] {
 
   override val translator: Translator = {
