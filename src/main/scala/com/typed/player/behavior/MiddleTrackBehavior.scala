@@ -1,52 +1,52 @@
-package com.typed.player.queue
+package com.typed.player.behavior
 
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.ActorContext
-import com.typed.player.models.Queue
-import com.typed.player.queue.QueueCommands._
-import com.typed.player.queue.QueueReplies._
+import com.typed.player.models.Player
+import com.typed.player.behavior.protocol.PlayerCommands._
+import com.typed.player.behavior.protocol.PlayerReplies._
 
-private case class PlayingBehavior(state: Queue, ctx: ActorContext[QueueCommand])
-  extends QueueBehavior[PlayingCommand] {
+private case class MiddleTrackBehavior(state: Player, ctx: ActorContext[PlayerCommand])
+  extends PlayerBehavior[MiddleTrackCommand] {
 
-  override def receiveMessage(cmd: PlayingCommand): Behavior[QueueCommand] = cmd match {
+  override def receiveMessage(cmd: MiddleTrackCommand): Behavior[PlayerCommand] = cmd match {
     case TogglePlay(replyTo) =>
       val newState = state.togglePlay()
       replyTo ! PlayToggled(newState)
-      QueueBehaviorFactory.playing(newState)
+      PlayerBehaviorFactory.middleTrack(newState)
 
     case ToggleShuffle(replyTo) =>
       val newState = state.toggleShuffle()
       replyTo ! ShuffleToggled(newState)
-      QueueBehaviorFactory.playing(newState)
+      PlayerBehaviorFactory.middleTrack(newState)
 
     case Skip(replyTo) =>
       val newState = state.skip()
       if (newState.isLastTrack) {
         replyTo ! SkippedToLastTrack(newState, ctx.self)
-        QueueBehaviorFactory.playingLastTrack(newState)
+        PlayerBehaviorFactory.lastTrack(newState)
       } else {
         replyTo ! Skipped(newState)
-        QueueBehaviorFactory.playing(newState)
+        PlayerBehaviorFactory.middleTrack(newState)
       }
 
     case SkipBack(replyTo) =>
       val newState = state.skipBack()
       if (newState.isFirstTrack) {
         replyTo ! SkippedBackToFirst(newState, ctx.self)
-        QueueBehaviorFactory.playingFirstTrack(newState)
+        PlayerBehaviorFactory.firstTrack(newState)
       } else {
         replyTo ! SkippedBack(newState)
-        QueueBehaviorFactory.playing(newState)
+        PlayerBehaviorFactory.middleTrack(newState)
       }
 
     case EnqueueTrack(track, replyTo) =>
       val newState = state.enqueue(track)
       replyTo ! TrackEnqueued(newState)
-      QueueBehaviorFactory.playing(newState)
+      PlayerBehaviorFactory.middleTrack(newState)
 
     case Stop(replyTo) =>
       replyTo ! Stopped(state, ctx.self)
-      QueueBehaviorFactory.stopped(state)
+      PlayerBehaviorFactory.stopped(state)
   }
 }

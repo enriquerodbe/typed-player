@@ -1,44 +1,44 @@
 package com.typed.player.player_interface
 
-import com.typed.player.player_interface.PlayerInterfaceCommands._
-import com.typed.player.queue.QueueCommands
+import com.typed.player.behavior.protocol.PlayerCommands
+import com.typed.player.player_interface.protocol.PlayerInterfaceCommands._
 
 private object Translators {
 
-  val Stopped: Translator[QueueCommands.StoppedCommand] = {
-    case ToggleShuffle(_) => QueueCommands.ToggleShuffle(_)
-    case EnqueueTrack(track, _) => QueueCommands.EnqueueFirstTrack(track, _)
+  val Stopped: Translator[PlayerCommands.StoppedCommand] = {
+    case ToggleShuffle(_) => PlayerCommands.ToggleShuffle(_)
+    case EnqueueTrack(track, _) => PlayerCommands.EnqueueFirstTrack(track, _)
   }
 
-  val OnlyTrack: Translator[QueueCommands.PlayingOnlyTrackCommand] = {
-    case TogglePlay(_) => QueueCommands.TogglePlay
-    case ToggleShuffle(_) => QueueCommands.ToggleShuffle
-    case EnqueueTrack(track, _) => QueueCommands.EnqueueSecondTrack(track, _)
-    case Stop(_) => QueueCommands.Stop
+  val OnlyTrack: Translator[PlayerCommands.OnlyTrackCommand] = {
+    case TogglePlay(_) => PlayerCommands.TogglePlay
+    case ToggleShuffle(_) => PlayerCommands.ToggleShuffle
+    case EnqueueTrack(track, _) => PlayerCommands.EnqueueSecondTrack(track, _)
+    case Stop(_) => PlayerCommands.Stop
   }
 
-  val FirstTrack: Translator[QueueCommands.PlayingFirstTrackCommand] = {
-    case TogglePlay(_) => QueueCommands.TogglePlay
-    case ToggleShuffle(_) => QueueCommands.ToggleShuffle
-    case Skip(_) => QueueCommands.Skip
-    case EnqueueTrack(track, _) => QueueCommands.EnqueueTrack(track, _)
-    case Stop(_) => QueueCommands.Stop
+  val FirstTrack: Translator[PlayerCommands.FirstTrackCommand] = {
+    case TogglePlay(_) => PlayerCommands.TogglePlay
+    case ToggleShuffle(_) => PlayerCommands.ToggleShuffle
+    case Skip(_) => PlayerCommands.Skip
+    case EnqueueTrack(track, _) => PlayerCommands.EnqueueTrack(track, _)
+    case Stop(_) => PlayerCommands.Stop
   }
 
-  val Playing: Translator[QueueCommands.PlayingCommand] = {
-    case TogglePlay(_) => QueueCommands.TogglePlay
-    case ToggleShuffle(_) => QueueCommands.ToggleShuffle
-    case Skip(_) => QueueCommands.Skip
-    case SkipBack(_) => QueueCommands.SkipBack
-    case EnqueueTrack(track, _) => QueueCommands.EnqueueTrack(track, _)
-    case Stop(_) => QueueCommands.Stop
+  val MiddleTrack: Translator[PlayerCommands.MiddleTrackCommand] = {
+    case TogglePlay(_) => PlayerCommands.TogglePlay
+    case ToggleShuffle(_) => PlayerCommands.ToggleShuffle
+    case Skip(_) => PlayerCommands.Skip
+    case SkipBack(_) => PlayerCommands.SkipBack
+    case EnqueueTrack(track, _) => PlayerCommands.EnqueueTrack(track, _)
+    case Stop(_) => PlayerCommands.Stop
   }
 
-  val LastTrack: Translator[QueueCommands.PlayingLastTrackCommand] = {
-    case TogglePlay(_) => QueueCommands.TogglePlay
-    case ToggleShuffle(_) => QueueCommands.ToggleShuffle
-    case SkipBack(_) => QueueCommands.SkipBack
-    case EnqueueTrack(track, _) => QueueCommands.EnqueueTrack(track, _)
-    case Stop(_) => QueueCommands.Stop
+  val LastTrack: Translator[PlayerCommands.LastTrackCommand] = {
+    case TogglePlay(_) => PlayerCommands.TogglePlay
+    case ToggleShuffle(_) => PlayerCommands.ToggleShuffle
+    case SkipBack(_) => PlayerCommands.SkipBack
+    case EnqueueTrack(track, _) => PlayerCommands.EnqueueTrack(track, _)
+    case Stop(_) => PlayerCommands.Stop
   }
 }

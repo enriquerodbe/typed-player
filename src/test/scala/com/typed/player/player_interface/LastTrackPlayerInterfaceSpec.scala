@@ -1,13 +1,13 @@
 package com.typed.player.player_interface
 
-import com.typed.player.models.{Queue, Track}
-import com.typed.player.player_interface.PlayerInterfaceCommands.{EnqueueTrack, Skip}
-import com.typed.player.player_interface.PlayerInterfaceReplies.Ok
+import com.typed.player.models.{Player, Track}
+import com.typed.player.player_interface.protocol.PlayerInterfaceCommands.{EnqueueTrack, Skip}
+import com.typed.player.player_interface.protocol.PlayerInterfaceReplies.Ok
 
 class LastTrackPlayerInterfaceSpec extends PlayerInterfaceSpecs {
 
   private val testTrack = Track("test")
-  val state: Queue = Queue.empty.enqueue(testTrack).enqueue(testTrack).skip().skip()
+  val state: Player = Player.empty.enqueue(testTrack).enqueue(testTrack).skip().skip()
   def playerInterface = {
     val ref = testKit.spawn(PlayerInterface())
     ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
@@ -21,8 +21,8 @@ class LastTrackPlayerInterfaceSpec extends PlayerInterfaceSpecs {
     ref
   }
 
-  "Player playing the last track" should behave like anyQueue(playerInterface, state)
-  it should behave like nonEmptyQueue(playerInterface, state)
-  it should behave like queueWithPastTracks(playerInterface, state)
-  it should behave like lastTrackQueue(playerInterface)
+  "Last track player" should behave like anyPlayer(playerInterface, state)
+  it should behave like nonEmptyPlayer(playerInterface, state)
+  it should behave like playerWithPastTracks(playerInterface, state)
+  it should behave like lastTrackPlayer(playerInterface)
 }

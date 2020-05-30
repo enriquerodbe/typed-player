@@ -1,9 +1,9 @@
-package com.typed.player.player_interface
+package com.typed.player.player_interface.protocol
 
 import akka.actor.typed.ActorRef
+import com.typed.player.behavior.protocol.PlayerReplies
 import com.typed.player.models.Track
-import com.typed.player.player_interface.PlayerInterfaceReplies.Reply
-import com.typed.player.queue.QueueReplies
+import PlayerInterfaceReplies.Reply
 
 object PlayerInterfaceCommands {
 
@@ -19,7 +19,7 @@ object PlayerInterfaceCommands {
   case class EnqueueTrack(track: Track, replyTo: ActorRef[Reply]) extends Request
   case class Stop(replyTo: ActorRef[Reply]) extends Request
 
-  private[player_interface] case class QueueReply(
-      reply: QueueReplies.Reply,
+  private[player_interface] case class PlayerReply(
+      reply: PlayerReplies.Reply,
       replyTo: ActorRef[Reply]) extends Command
 }

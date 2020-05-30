@@ -5,8 +5,8 @@ import akka.actor.typed.scaladsl.AskPattern._
 import akka.util.Timeout
 import com.typed.player.models.Track
 import com.typed.player.player_interface.PlayerInterface
-import com.typed.player.player_interface.PlayerInterfaceCommands._
-import com.typed.player.player_interface.PlayerInterfaceReplies._
+import com.typed.player.player_interface.protocol.PlayerInterfaceCommands._
+import com.typed.player.player_interface.protocol.PlayerInterfaceReplies._
 import scala.concurrent.duration.DurationDouble
 import scala.concurrent.{Await, Future}
 
@@ -42,7 +42,7 @@ object Main extends App {
     val result = Await.result(futureResponse, timeout.duration)
 
     result match {
-      case Ok(queue) => println(queue)
+      case Ok(state) => println(state)
       case Error(message) => println(s"Error: $message")
     }
   }

@@ -2,12 +2,12 @@ package com.typed.player.models
 
 import scala.util.Random
 
-object Queue {
+object Player {
 
-  val empty: Queue = new Queue()
+  val empty: Player = new Player()
 }
 
-case class Queue(
+case class Player(
     pastTracks: Seq[Track],
     currentTrack: Option[Track],
     futureTracks: Seq[Track],
@@ -16,22 +16,22 @@ case class Queue(
 
   def this() = this(Seq.empty, None, Seq.empty, false, false)
 
-  def enqueue(track: Track): Queue = this.copy(futureTracks = futureTracks :+ track)
+  def enqueue(track: Track): Player = this.copy(futureTracks = futureTracks :+ track)
 
-  def togglePlay(): Queue = this.copy(playing = !playing)
+  def togglePlay(): Player = this.copy(playing = !playing)
 
-  def toggleShuffle(): Queue = this.copy(shuffleMode = !shuffleMode)
+  def toggleShuffle(): Player = this.copy(shuffleMode = !shuffleMode)
 
   def isLastTrack: Boolean = futureTracks.isEmpty
 
   def isFirstTrack: Boolean = pastTracks.isEmpty
 
-  def skip(): Queue = {
+  def skip(): Player = {
     if (shuffleMode) shuffleSkip()
     else regularSkip()
   }
 
-  private def regularSkip(): Queue = {
+  private def regularSkip(): Player = {
     this.copy(
       pastTracks = pastTracks ++ currentTrack.toList,
       currentTrack = futureTracks.headOption,
@@ -39,7 +39,7 @@ case class Queue(
     )
   }
 
-  private def shuffleSkip(): Queue = {
+  private def shuffleSkip(): Player = {
     val randomTrack = Random.nextInt(futureTracks.length)
     val (beforeChosenTrack, chosenTrackAndAfter) = futureTracks.splitAt(randomTrack)
     this.copy(
@@ -49,7 +49,7 @@ case class Queue(
     )
   }
 
-  def skipBack(): Queue = {
+  def skipBack(): Player = {
     this.copy(
       pastTracks = pastTracks.dropRight(1),
       currentTrack = pastTracks.lastOption,

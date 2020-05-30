@@ -1,14 +1,14 @@
 package com.typed.player.player_interface
 
-import com.typed.player.models.{Queue, Track}
-import com.typed.player.player_interface.PlayerInterfaceCommands.{EnqueueTrack, Skip}
-import com.typed.player.player_interface.PlayerInterfaceReplies.Ok
+import com.typed.player.models.{Player, Track}
+import com.typed.player.player_interface.protocol.PlayerInterfaceCommands.{EnqueueTrack, Skip}
+import com.typed.player.player_interface.protocol.PlayerInterfaceReplies.Ok
 
-class PlayingPlayerInterfaceSpec extends PlayerInterfaceSpecs {
+class MiddleTrackPlayerInterfaceSpec extends PlayerInterfaceSpecs {
 
   private val testTrack = Track("test")
-  val state: Queue =
-    Queue.empty
+  val state: Player =
+    Player.empty
       .enqueue(testTrack)
       .enqueue(testTrack)
       .enqueue(testTrack)
@@ -29,8 +29,8 @@ class PlayingPlayerInterfaceSpec extends PlayerInterfaceSpecs {
     ref
   }
 
-  "Player playing a track in the middle" should behave like anyQueue(playerInterface, state)
-  it should behave like nonEmptyQueue(playerInterface, state)
-  it should behave like queueWithPastTracks(playerInterface, state)
-  it should behave like queueWithFutureTracks(playerInterface, state)
+  "Middle track player" should behave like anyPlayer(playerInterface, state)
+  it should behave like nonEmptyPlayer(playerInterface, state)
+  it should behave like playerWithPastTracks(playerInterface, state)
+  it should behave like playerWithFutureTracks(playerInterface, state)
 }

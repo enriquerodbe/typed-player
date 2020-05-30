@@ -1,13 +1,13 @@
 package com.typed.player.player_interface
 
-import com.typed.player.models.{Queue, Track}
-import com.typed.player.player_interface.PlayerInterfaceCommands.EnqueueTrack
-import com.typed.player.player_interface.PlayerInterfaceReplies.Ok
+import com.typed.player.models.{Player, Track}
+import com.typed.player.player_interface.protocol.PlayerInterfaceCommands.EnqueueTrack
+import com.typed.player.player_interface.protocol.PlayerInterfaceReplies.Ok
 
 class FirstTrackPlayerInterfaceSpec extends PlayerInterfaceSpecs {
 
   val testTrack = Track("test")
-  val state = Queue.empty.enqueue(testTrack).enqueue(testTrack)
+  val state = Player.empty.enqueue(testTrack).enqueue(testTrack)
   def playerInterface = {
     val ref = testKit.spawn(PlayerInterface())
     ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
@@ -17,8 +17,8 @@ class FirstTrackPlayerInterfaceSpec extends PlayerInterfaceSpecs {
     ref
   }
 
-  "Player playing the first track" should behave like anyQueue(playerInterface, state)
-  it should behave like nonEmptyQueue(playerInterface, state)
-  it should behave like queueWithFutureTracks(playerInterface, state)
-  it should behave like firstTrackQueue(playerInterface)
+  "First track player" should behave like anyPlayer(playerInterface, state)
+  it should behave like nonEmptyPlayer(playerInterface, state)
+  it should behave like playerWithFutureTracks(playerInterface, state)
+  it should behave like firstTrackPlayer(playerInterface)
 }
