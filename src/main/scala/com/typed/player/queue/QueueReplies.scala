@@ -16,25 +16,26 @@ object QueueReplies {
 
   sealed trait SkippedReply extends Reply
   case class SkippedFromFirst(
-      state: Queue, next: ActorRef[PlayingCommand]) extends SkippedReply
+      state: Queue, replyTo: ActorRef[PlayingCommand]) extends SkippedReply
   case class Skipped(state: Queue) extends SkippedReply
   case class SkippedToLastTrack(
-      state: Queue, next: ActorRef[PlayingLastTrackCommand]) extends SkippedReply
+      state: Queue, replyTo: ActorRef[PlayingLastTrackCommand]) extends SkippedReply
 
   sealed trait SkippedBackReply extends Reply
   case class SkippedBackFromLastTrack(
-      state: Queue, next: ActorRef[PlayingCommand]) extends SkippedBackReply
+      state: Queue, replyTo: ActorRef[PlayingCommand]) extends SkippedBackReply
   case class SkippedBack(state: Queue) extends SkippedBackReply
   case class SkippedBackToFirst(
-      state: Queue, next: ActorRef[PlayingFirstTrackCommand]) extends SkippedBackReply
+      state: Queue, replyTo: ActorRef[PlayingFirstTrackCommand]) extends SkippedBackReply
 
-  case class FirstTrackEnqueued(state: Queue, next: ActorRef[PlayingOnlyTrackCommand]) extends Reply
+  case class FirstTrackEnqueued(
+      state: Queue, replyTo: ActorRef[PlayingOnlyTrackCommand]) extends Reply
   case class SecondTrackEnqueued(
-      state: Queue, next: ActorRef[PlayingFirstTrackCommand]) extends Reply
+      state: Queue, replyTo: ActorRef[PlayingFirstTrackCommand]) extends Reply
   sealed trait TrackEnqueuedReply extends Reply
   case class TrackEnqueuedAfterLast(
-      state: Queue, next: ActorRef[PlayingCommand]) extends TrackEnqueuedReply
+      state: Queue, replyTo: ActorRef[PlayingCommand]) extends TrackEnqueuedReply
   case class TrackEnqueued(state: Queue) extends TrackEnqueuedReply
 
-  case class Stopped(state: Queue, next: ActorRef[StoppedCommand]) extends Reply
+  case class Stopped(state: Queue, replyTo: ActorRef[StoppedCommand]) extends Reply
 }

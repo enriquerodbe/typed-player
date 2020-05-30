@@ -7,13 +7,13 @@ import com.typed.player.player_interface.PlayerInterfaceReplies.Ok
 class FirstTrackPlayerInterfaceSpec extends PlayerInterfaceSpecs {
 
   val testTrack = Track("test")
-  val state: Queue = Queue.empty.enqueue(testTrack).enqueue(testTrack)
+  val state = Queue.empty.enqueue(testTrack).enqueue(testTrack)
   def playerInterface = {
     val ref = testKit.spawn(PlayerInterface())
-    ref ! EnqueueTrack(testTrack, testProbe.ref)
-    testProbe.expectMessageType[Ok]
-    ref ! EnqueueTrack(testTrack, testProbe.ref)
-    testProbe.expectMessage(Ok(state))
+    ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
+    playerInterfaceProbe.expectMessageType[Ok]
+    ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
+    playerInterfaceProbe.expectMessage(Ok(state))
     ref
   }
 

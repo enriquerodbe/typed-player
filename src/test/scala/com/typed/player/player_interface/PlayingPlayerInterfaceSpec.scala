@@ -16,16 +16,16 @@ class PlayingPlayerInterfaceSpec extends PlayerInterfaceSpecs {
       .skip()
   def playerInterface = {
     val ref = testKit.spawn(PlayerInterface())
-    ref ! EnqueueTrack(testTrack, testProbe.ref)
-    ref ! EnqueueTrack(testTrack, testProbe.ref)
-    ref ! EnqueueTrack(testTrack, testProbe.ref)
-    ref ! Skip(testProbe.ref)
-    ref ! Skip(testProbe.ref)
-    testProbe.expectMessageType[Ok]
-    testProbe.expectMessageType[Ok]
-    testProbe.expectMessageType[Ok]
-    testProbe.expectMessageType[Ok]
-    testProbe.expectMessage(Ok(state))
+    ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
+    ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
+    ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
+    ref ! Skip(playerInterfaceProbe.ref)
+    ref ! Skip(playerInterfaceProbe.ref)
+    playerInterfaceProbe.expectMessageType[Ok]
+    playerInterfaceProbe.expectMessageType[Ok]
+    playerInterfaceProbe.expectMessageType[Ok]
+    playerInterfaceProbe.expectMessageType[Ok]
+    playerInterfaceProbe.expectMessage(Ok(state))
     ref
   }
 

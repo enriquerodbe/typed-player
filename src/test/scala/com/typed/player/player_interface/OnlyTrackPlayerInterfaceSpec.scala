@@ -10,8 +10,8 @@ class OnlyTrackPlayerInterfaceSpec extends PlayerInterfaceSpecs {
   val state: Queue = Queue.empty.enqueue(testTrack)
   def playerInterface = {
     val ref = testKit.spawn(PlayerInterface())
-    ref ! EnqueueTrack(testTrack, testProbe.ref)
-    testProbe.expectMessage(Ok(state))
+    ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
+    playerInterfaceProbe.expectMessage(Ok(state))
     ref
   }
 

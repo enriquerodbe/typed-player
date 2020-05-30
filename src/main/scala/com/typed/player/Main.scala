@@ -10,6 +10,7 @@ import com.typed.player.player_interface.PlayerInterfaceReplies._
 import scala.concurrent.duration.DurationDouble
 import scala.concurrent.{Await, Future}
 
+@SuppressWarnings(Array("org.wartremover.warts.All"))
 object Main extends App {
 
   implicit val timeout: Timeout = 3.seconds

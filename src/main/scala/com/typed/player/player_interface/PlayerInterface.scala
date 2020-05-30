@@ -29,7 +29,7 @@ private class PlayerInterface[QC <: QueueCommand](translator: Translator[QC], qu
       waitForQueueReply()
 
     case (_, request) =>
-      request.replyTo ! Error(s"$request in $this")
+      request.replyTo ! Error(s"Cannot process ${request.toString} in ${this.toString}")
       Behaviors.same
   }
 
@@ -38,6 +38,7 @@ private class PlayerInterface[QC <: QueueCommand](translator: Translator[QC], qu
     translator(request)(adapter)
   }
 
+  @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def waitForQueueReply(): Behavior[Command] = {
     Behaviors.withStash(100) { stash =>
       Behaviors.receiveMessage {

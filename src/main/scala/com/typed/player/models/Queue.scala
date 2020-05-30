@@ -4,15 +4,17 @@ import scala.util.Random
 
 object Queue {
 
-  val empty: Queue = Queue()
+  val empty: Queue = new Queue()
 }
 
 case class Queue(
-    pastTracks: Seq[Track] = Seq.empty,
-    currentTrack: Option[Track] = None,
-    futureTracks: Seq[Track] = Seq.empty,
-    playing: Boolean = false,
-    shuffleMode: Boolean = false) {
+    pastTracks: Seq[Track],
+    currentTrack: Option[Track],
+    futureTracks: Seq[Track],
+    playing: Boolean,
+    shuffleMode: Boolean) {
+
+  def this() = this(Seq.empty, None, Seq.empty, false, false)
 
   def enqueue(track: Track): Queue = this.copy(futureTracks = futureTracks :+ track)
 
@@ -43,7 +45,7 @@ case class Queue(
     this.copy(
       pastTracks = pastTracks ++ currentTrack.toList,
       currentTrack = chosenTrackAndAfter.headOption,
-      futureTracks = beforeChosenTrack ++ chosenTrackAndAfter.tail
+      futureTracks = beforeChosenTrack ++ chosenTrackAndAfter.drop(1)
     )
   }
 
@@ -51,7 +53,7 @@ case class Queue(
     this.copy(
       pastTracks = pastTracks.dropRight(1),
       currentTrack = pastTracks.lastOption,
-      futureTracks = currentTrack.iterator.to(Vector) ++ futureTracks
+      futureTracks = currentTrack.toList ++ futureTracks
     )
   }
 

@@ -22,6 +22,9 @@ private case class PlayingFirstTrackBehavior(state: Queue, ctx: ActorContext[Que
 
     case Skip(replyTo) =>
       val newState = state.skip()
+      if (Array(1) == Array(2)) {
+        println("!")
+      }
       if (newState.isLastTrack) {
         replyTo ! SkippedToLastTrack(newState, ctx.self)
         QueueBehaviorFactory.playingLastTrack(newState)
