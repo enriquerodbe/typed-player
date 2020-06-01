@@ -7,21 +7,23 @@ import com.typed.player.player_interface.protocol.PlayerInterfaceReplies.{Error,
 import com.typed.player.behavior.PlayerBehaviorFactory
 import com.typed.player.behavior.protocol.PlayerCommands.PlayerCommand
 import com.typed.player.behavior.protocol.PlayerReplies.Reply
+import com.typed.player.player_interface.PlayerInterface.StashSize
 
 object PlayerInterface {
+
+  val StashSize = 20
 
   def apply(): Behavior[Command] = Behaviors.setup { ctx =>
     val player = ctx.spawn(PlayerBehaviorFactory.initial(), "player")
     PlayerInterface(Translators.Stopped, player).behavior
   }
 
-  private def apply[PC <: PlayerCommand](
-      translator: Translator[PC],
-      player: ActorRef[PC]): PlayerInterface[PC] = new PlayerInterface[PC](translator, player)
+  private def apply[C <: PlayerCommand](
+      translator: Translator[C],
+      player: ActorRef[C]): PlayerInterface[C] = new PlayerInterface[C](translator, player)
 }
 
-private class PlayerInterface[PC <: PlayerCommand](
-    translator: Translator[PC], player: ActorRef[PC]) {
+private class PlayerInterface[C <: PlayerCommand](translator: Translator[C], player: ActorRef[C]) {
 
   val behavior: Behavior[Command] = Behaviors.receive {
     case (ctx, request: Request) if translator.isDefinedAt(request) =>
@@ -34,14 +36,14 @@ private class PlayerInterface[PC <: PlayerCommand](
       Behaviors.same
   }
 
-  def translateToPlayerCommand(ctx: ActorContext[Command], request: Request): PC = {
+  def translateToPlayerCommand(ctx: ActorContext[Command], request: Request): C = {
     val adapter = ctx.messageAdapter(PlayerReply(_, request.replyTo))
     translator(request)(adapter)
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def waitForPlayerReply(): Behavior[Command] = {
-    Behaviors.withStash(100) { stash =>
+    Behaviors.withStash(StashSize) { stash =>
       Behaviors.receiveMessage {
         case cmd: Request =>
           stash.stash(cmd)

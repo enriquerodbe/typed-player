@@ -7,9 +7,9 @@ import com.typed.player.behavior.protocol.PlayerReplies
 
 package object player_interface {
 
-  private[player_interface] type PlayerCommandConstructor[PC <: PlayerCommand] =
-    ActorRef[PlayerReplies.Reply] => PC
+  private[player_interface] type PlayerCommandConstructor[C <: PlayerCommand] =
+    ActorRef[PlayerReplies.Reply] => C
 
-  private[player_interface] type Translator[PC <: PlayerCommand] =
-    PartialFunction[Request, PlayerCommandConstructor[PC]]
+  private[player_interface] type Translator[C <: PlayerCommand] =
+    PartialFunction[Request, PlayerCommandConstructor[C]]
 }
