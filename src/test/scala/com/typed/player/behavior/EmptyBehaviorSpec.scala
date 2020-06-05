@@ -5,18 +5,18 @@ import com.typed.player.BaseSpec
 import com.typed.player.models.{Player, Track}
 import com.typed.player.behavior.protocol.PlayerCommands.{EnqueueFirstTrack, ToggleShuffle}
 
-class StoppedBehaviorSpec extends BaseSpec {
+class EmptyBehaviorSpec extends BaseSpec {
 
   trait Context {
     val testTrack = Track("test")
     val initialState = Player.empty
-    val stoppedBehavior = BehaviorTestKit(PlayerBehaviorFactory.initial())
+    val emptyBehavior = BehaviorTestKit(PlayerBehaviorFactory.initial())
   }
 
-  "Stopped behavior" should "enqueue the first track" in new Context {
+  "Empty behavior" should "enqueue the first track" in new Context {
     val enqueue = EnqueueFirstTrack(testTrack, playerProbe.ref)
 
-    stoppedBehavior.run(enqueue)
+    emptyBehavior.run(enqueue)
 
     val reply = playerProbe.receiveMessage()
     reply.state shouldBe initialState.enqueue(testTrack)
@@ -25,7 +25,7 @@ class StoppedBehaviorSpec extends BaseSpec {
   it should "toggle shuffle" in new Context {
     val toggleShuffle = ToggleShuffle(playerProbe.ref)
 
-    stoppedBehavior.run(toggleShuffle)
+    emptyBehavior.run(toggleShuffle)
 
     val reply = playerProbe.receiveMessage()
     reply.state shouldBe initialState.toggleShuffle()

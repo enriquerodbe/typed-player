@@ -36,7 +36,8 @@ private case class FirstTrackBehavior(state: Player, ctx: ActorContext[PlayerCom
       PlayerBehaviorFactory.firstTrack(newState)
 
     case Stop(replyTo) =>
-      replyTo ! Stopped(state, ctx.self)
-      PlayerBehaviorFactory.stopped(state)
+      val newState = state.stop()
+      replyTo ! Stopped(newState, ctx.self)
+      PlayerBehaviorFactory.empty(newState)
   }
 }

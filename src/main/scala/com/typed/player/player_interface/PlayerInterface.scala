@@ -2,12 +2,12 @@ package com.typed.player.player_interface
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
-import com.typed.player.player_interface.protocol.PlayerInterfaceCommands.{Command, PlayerReply, Request}
-import com.typed.player.player_interface.protocol.PlayerInterfaceReplies.{Error, Ok}
 import com.typed.player.behavior.PlayerBehaviorFactory
 import com.typed.player.behavior.protocol.PlayerCommands.PlayerCommand
-import com.typed.player.behavior.protocol.PlayerReplies.Reply
+import com.typed.player.behavior.protocol.PlayerReplies._
 import com.typed.player.player_interface.PlayerInterface.StashSize
+import com.typed.player.player_interface.protocol.PlayerInterfaceCommands.{Command, PlayerReply, Request}
+import com.typed.player.player_interface.protocol.PlayerInterfaceReplies.{Error, Ok}
 
 object PlayerInterface {
 
@@ -15,7 +15,7 @@ object PlayerInterface {
 
   def apply(): Behavior[Command] = Behaviors.setup { ctx =>
     val player = ctx.spawn(PlayerBehaviorFactory.initial(), "player")
-    PlayerInterface(Translators.Stopped, player).behavior
+    PlayerInterface(Translators.Empty, player).behavior
   }
 
   private def apply[C <: PlayerCommand](
@@ -31,8 +31,8 @@ private class PlayerInterface[C <: PlayerCommand](translator: Translator[C], pla
       player ! playerCommand
       waitForPlayerReply()
 
-    case (_, request) =>
-      request.replyTo ! Error(s"Cannot process ${request.toString} in ${this.toString}")
+    case (_, command) =>
+      command.replyTo ! Error(s"Cannot process ${command.toString} in ${this.toString}")
       Behaviors.same
   }
 
@@ -57,22 +57,19 @@ private class PlayerInterface[C <: PlayerCommand](translator: Translator[C], pla
     }
   }
 
-  def nextState(playerReply: Reply): PlayerInterface[_] = {
-    import com.typed.player.behavior.protocol.PlayerReplies._
-    playerReply match {
-      case PlayToggled(_) => this
-      case ShuffleToggled(_) => this
-      case SkippedFromFirst(_, replyTo) => PlayerInterface(Translators.MiddleTrack, replyTo)
-      case Skipped(_) => this
-      case SkippedToLastTrack(_, replyTo) => PlayerInterface(Translators.LastTrack, replyTo)
-      case SkippedBackFromLastTrack(_, replyTo) => PlayerInterface(Translators.MiddleTrack, replyTo)
-      case SkippedBack(_) => this
-      case SkippedBackToFirst(_, replyTo) => PlayerInterface(Translators.FirstTrack, replyTo)
-      case FirstTrackEnqueued(_, replyTo) => PlayerInterface(Translators.OnlyTrack, replyTo)
-      case SecondTrackEnqueued(_, replyTo) => PlayerInterface(Translators.FirstTrack, replyTo)
-      case TrackEnqueuedAfterLast(_, replyTo) => PlayerInterface(Translators.MiddleTrack, replyTo)
-      case TrackEnqueued(_) => this
-      case Stopped(_, replyTo) => PlayerInterface(Translators.Stopped, replyTo)
-    }
+  def nextState(playerReply: Reply): PlayerInterface[_] = playerReply match {
+    case PlayToggled(_) => this
+    case ShuffleToggled(_) => this
+    case SkippedFromFirst(_, replyTo) => PlayerInterface(Translators.MiddleTrack, replyTo)
+    case Skipped(_) => this
+    case SkippedToLastTrack(_, replyTo) => PlayerInterface(Translators.LastTrack, replyTo)
+    case SkippedBackFromLastTrack(_, replyTo) => PlayerInterface(Translators.MiddleTrack, replyTo)
+    case SkippedBack(_) => this
+    case SkippedBackToFirst(_, replyTo) => PlayerInterface(Translators.FirstTrack, replyTo)
+    case FirstTrackEnqueued(_, replyTo) => PlayerInterface(Translators.OnlyTrack, replyTo)
+    case SecondTrackEnqueued(_, replyTo) => PlayerInterface(Translators.FirstTrack, replyTo)
+    case TrackEnqueuedAfterLast(_, replyTo) => PlayerInterface(Translators.MiddleTrack, replyTo)
+    case TrackEnqueued(_) => this
+    case Stopped(_, replyTo) => PlayerInterface(Translators.Empty, replyTo)
   }
 }

@@ -5,7 +5,7 @@ import com.typed.player.player_interface.protocol.PlayerInterfaceCommands._
 
 private object Translators {
 
-  val Stopped: Translator[PlayerCommands.StoppedCommand] = {
+  val Empty: Translator[PlayerCommands.EmptyCommand] = {
     case ToggleShuffle(_) => PlayerCommands.ToggleShuffle(_)
     case EnqueueTrack(track, _) => PlayerCommands.EnqueueFirstTrack(track, _)
   }

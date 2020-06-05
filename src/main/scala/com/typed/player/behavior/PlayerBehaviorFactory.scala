@@ -7,23 +7,23 @@ import com.typed.player.behavior.protocol.PlayerCommands._
 
 object PlayerBehaviorFactory {
 
-  def initial(): Behavior[StoppedCommand] = stopped(Player.empty).narrow
+  def initial(): Behavior[EmptyCommand] = empty(Player.empty).narrow
 
-  private[behavior] def stopped(state: Player): Behavior[PlayerCommand] = Behaviors.receivePartial {
-    case (ctx, cmd: StoppedCommand) => StoppedBehavior(state, ctx).receiveMessage(cmd)
+  private[behavior] def empty(state: Player): Behavior[PlayerCommand] = {
+    Behaviors.receivePartial {
+      case (ctx, cmd: EmptyCommand) => EmptyBehavior(state, ctx).receiveMessage(cmd)
+    }
   }
 
   private[behavior] def onlyTrack(state: Player): Behavior[PlayerCommand] = {
     Behaviors.receivePartial {
-      case (ctx, cmd: OnlyTrackCommand) =>
-        OnlyTrackBehavior(state, ctx).receiveMessage(cmd)
+      case (ctx, cmd: OnlyTrackCommand) => OnlyTrackBehavior(state, ctx).receiveMessage(cmd)
     }
   }
 
   private[behavior] def firstTrack(state: Player): Behavior[PlayerCommand] = {
     Behaviors.receivePartial {
-      case (ctx, cmd: FirstTrackCommand) =>
-        FirstTrackBehavior(state, ctx).receiveMessage(cmd)
+      case (ctx, cmd: FirstTrackCommand) => FirstTrackBehavior(state, ctx).receiveMessage(cmd)
     }
   }
 
@@ -35,8 +35,7 @@ object PlayerBehaviorFactory {
 
   private[behavior] def lastTrack(state: Player): Behavior[PlayerCommand] = {
     Behaviors.receivePartial {
-      case (ctx, cmd: LastTrackCommand) =>
-        LastTrackBehavior(state, ctx).receiveMessage(cmd)
+      case (ctx, cmd: LastTrackCommand) => LastTrackBehavior(state, ctx).receiveMessage(cmd)
     }
   }
 }

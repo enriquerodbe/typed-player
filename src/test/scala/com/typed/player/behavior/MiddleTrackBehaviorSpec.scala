@@ -15,7 +15,6 @@ class MiddleTrackBehaviorSpec extends BaseSpec {
         .enqueue(Track("2"))
         .enqueue(Track("3"))
         .skip()
-        .skip()
 
     val middleTrackBehavior = BehaviorTestKit(PlayerBehaviorFactory.middleTrack(initialState))
   }
@@ -59,7 +58,7 @@ class MiddleTrackBehaviorSpec extends BaseSpec {
 
     val reply = playerProbe.receiveMessage()
 
-    reply.state shouldBe initialState
+    reply.state shouldBe Player.empty
     reply shouldBe a [Stopped]
   }
 }

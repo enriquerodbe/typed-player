@@ -26,7 +26,8 @@ private case class OnlyTrackBehavior(state: Player, ctx: ActorContext[PlayerComm
       PlayerBehaviorFactory.firstTrack(newState)
 
     case Stop(replyTo) =>
-      replyTo ! Stopped(state, ctx.self)
-      PlayerBehaviorFactory.stopped(state)
+      val newState = state.stop()
+      replyTo ! Stopped(newState, ctx.self)
+      PlayerBehaviorFactory.empty(newState)
   }
 }

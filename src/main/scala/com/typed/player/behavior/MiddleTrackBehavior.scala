@@ -46,7 +46,8 @@ private case class MiddleTrackBehavior(state: Player, ctx: ActorContext[PlayerCo
       PlayerBehaviorFactory.middleTrack(newState)
 
     case Stop(replyTo) =>
-      replyTo ! Stopped(state, ctx.self)
-      PlayerBehaviorFactory.stopped(state)
+      val newState = state.stop()
+      replyTo ! Stopped(newState, ctx.self)
+      PlayerBehaviorFactory.empty(newState)
   }
 }

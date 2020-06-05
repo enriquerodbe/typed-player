@@ -37,5 +37,5 @@ object PlayerReplies {
       state: Player, replyTo: ActorRef[MiddleTrackCommand]) extends TrackEnqueuedReply
   case class TrackEnqueued(state: Player) extends TrackEnqueuedReply
 
-  case class Stopped(state: Player, replyTo: ActorRef[StoppedCommand]) extends Reply
+  case class Stopped(state: Player, replyTo: ActorRef[EmptyCommand]) extends Reply
 }

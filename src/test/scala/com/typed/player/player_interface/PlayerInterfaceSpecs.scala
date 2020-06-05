@@ -48,7 +48,7 @@ trait PlayerInterfaceSpecs extends BaseSpec {
 
     it should "accept Stop command" in {
       playerInterface ! Stop(playerInterfaceProbe.ref)
-      playerInterfaceProbe.expectMessage(Ok(state))
+      playerInterfaceProbe.expectMessage(Ok(Player.empty))
     }
   }
 

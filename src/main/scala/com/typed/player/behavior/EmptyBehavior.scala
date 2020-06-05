@@ -6,14 +6,14 @@ import com.typed.player.models.Player
 import com.typed.player.behavior.protocol.PlayerCommands._
 import com.typed.player.behavior.protocol.PlayerReplies._
 
-private case class StoppedBehavior(state: Player, ctx: ActorContext[PlayerCommand])
-  extends PlayerBehavior[StoppedCommand] {
+private case class EmptyBehavior(state: Player, ctx: ActorContext[PlayerCommand])
+  extends PlayerBehavior[EmptyCommand] {
 
-  override def receiveMessage(cmd: StoppedCommand): Behavior[PlayerCommand] = cmd match {
+  override def receiveMessage(cmd: EmptyCommand): Behavior[PlayerCommand] = cmd match {
     case ToggleShuffle(replyTo) =>
       val newState = state.toggleShuffle()
       replyTo ! ShuffleToggled(newState)
-      PlayerBehaviorFactory.stopped(newState)
+      PlayerBehaviorFactory.empty(newState)
 
     case EnqueueFirstTrack(track, replyTo) =>
       val newState = state.enqueue(track)

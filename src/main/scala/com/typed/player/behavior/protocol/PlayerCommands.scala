@@ -8,7 +8,7 @@ object PlayerCommands {
 
   sealed trait PlayerCommand
   sealed trait MiddleTrackCommand extends PlayerCommand
-  sealed trait StoppedCommand extends PlayerCommand
+  sealed trait EmptyCommand extends PlayerCommand
   sealed trait FirstTrackCommand extends PlayerCommand
   sealed trait LastTrackCommand extends PlayerCommand
   sealed trait OnlyTrackCommand extends PlayerCommand
@@ -21,7 +21,7 @@ object PlayerCommands {
 
   case class ToggleShuffle(replyTo: ActorRef[ShuffleToggled])
     extends MiddleTrackCommand
-    with StoppedCommand
+    with EmptyCommand
     with OnlyTrackCommand
     with FirstTrackCommand
     with LastTrackCommand
@@ -35,7 +35,7 @@ object PlayerCommands {
     with LastTrackCommand
 
   case class EnqueueFirstTrack(track: Track, replyTo: ActorRef[FirstTrackEnqueued])
-    extends StoppedCommand
+    extends EmptyCommand
 
   case class EnqueueSecondTrack(track: Track, replyTo: ActorRef[SecondTrackEnqueued])
     extends OnlyTrackCommand

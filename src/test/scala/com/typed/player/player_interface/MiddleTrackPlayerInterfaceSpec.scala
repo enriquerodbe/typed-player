@@ -13,15 +13,12 @@ class MiddleTrackPlayerInterfaceSpec extends PlayerInterfaceSpecs {
       .enqueue(testTrack)
       .enqueue(testTrack)
       .skip()
-      .skip()
   def playerInterface = {
     val ref = testKit.spawn(PlayerInterface())
     ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
     ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
     ref ! EnqueueTrack(testTrack, playerInterfaceProbe.ref)
     ref ! Skip(playerInterfaceProbe.ref)
-    ref ! Skip(playerInterfaceProbe.ref)
-    playerInterfaceProbe.expectMessageType[Ok]
     playerInterfaceProbe.expectMessageType[Ok]
     playerInterfaceProbe.expectMessageType[Ok]
     playerInterfaceProbe.expectMessageType[Ok]

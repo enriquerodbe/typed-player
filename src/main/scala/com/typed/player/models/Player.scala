@@ -16,7 +16,10 @@ case class Player(
 
   def this() = this(Seq.empty, None, Seq.empty, false, false)
 
-  def enqueue(track: Track): Player = this.copy(futureTracks = futureTracks :+ track)
+  def enqueue(track: Track): Player = {
+    if (currentTrack.isEmpty) this.copy(currentTrack = Some(track))
+    else this.copy(futureTracks = futureTracks :+ track)
+  }
 
   def togglePlay(): Player = this.copy(playing = !playing)
 
@@ -56,6 +59,8 @@ case class Player(
       futureTracks = currentTrack.toList ++ futureTracks
     )
   }
+
+  def stop(): Player = Player.empty.copy(shuffleMode = shuffleMode)
 
   override def toString: String = {
     s"$playingStatusString " +
