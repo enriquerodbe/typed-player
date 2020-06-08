@@ -1,7 +1,5 @@
 package com.typed.player.models
 
-import scala.util.Random
-
 object Player {
 
   val empty: Player = new Player()
@@ -30,25 +28,10 @@ case class Player(
   def isFirstTrack: Boolean = pastTracks.isEmpty
 
   def skip(): Player = {
-    if (shuffleMode) shuffleSkip()
-    else regularSkip()
-  }
-
-  private def regularSkip(): Player = {
     this.copy(
       pastTracks = pastTracks ++ currentTrack.toList,
       currentTrack = futureTracks.headOption,
       futureTracks = futureTracks.drop(1)
-    )
-  }
-
-  private def shuffleSkip(): Player = {
-    val randomTrack = Random.nextInt(futureTracks.length)
-    val (beforeChosenTrack, chosenTrackAndAfter) = futureTracks.splitAt(randomTrack)
-    this.copy(
-      pastTracks = pastTracks ++ currentTrack.toList,
-      currentTrack = chosenTrackAndAfter.headOption,
-      futureTracks = beforeChosenTrack ++ chosenTrackAndAfter.drop(1)
     )
   }
 
@@ -61,24 +44,4 @@ case class Player(
   }
 
   def stop(): Player = Player.empty.copy(shuffleMode = shuffleMode)
-
-  override def toString: String = {
-    s"$playingStatusString " +
-      s"$shuffleStatusString" +
-      s"$pastTracksString " +
-      s"$currentTrackString " +
-      s"$futureTracksString"
-  }
-
-  private def playingStatusString: String = if (playing) "Playing" else "Paused"
-
-  private def shuffleStatusString: String = if (shuffleMode) "(Shuffle) " else ""
-
-  private def pastTracksString: String = mkString(pastTracks)
-
-  private def currentTrackString: String = mkString(currentTrack.toList)
-
-  private def futureTracksString: String = mkString(futureTracks)
-
-  private def mkString(tracks: Seq[Track]): String = tracks.mkString("[", ",", "]")
 }

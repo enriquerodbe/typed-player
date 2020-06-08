@@ -1,3 +1,4 @@
+
 name := "typed-player"
 
 version := "0.1"
@@ -14,3 +15,8 @@ libraryDependencies ++= Seq(
 
 wartremoverErrors in (Compile, compile) ++= Warts.unsafe
 wartremoverErrors in (Test, test) ++= Warts.allBut(Wart.NonUnitStatements)
+
+coverageEnabled := true
+coverageFailOnMinimum := true
+coverageMinimum := 100
+coverageExcludedPackages := "com.typed.player.Main"
